@@ -6,11 +6,13 @@
     @apply sr-only text-sm !mb-2 block;
 }
 
-.table-repeater-column.has-hidden-label .fi-fo-field-wrp:has(.fi-checkbox-input) > label.fi-fo-checkbox-list-option-label {
+.table-repeater-column.has-hidden-label
+    .fi-fo-field-wrp:has(.fi-checkbox-input)
+    > label.fi-fo-checkbox-list-option-label {
     @apply not-sr-only;
 }
 
-@media (min-width: calc(theme('screens.sm') + 1px)) {
+@media (min-width: calc(theme("screens.sm") + 1px)) {
     .table-repeater-component.break-point-sm {
         &.streamlined {
             .fi-input-wrp,
@@ -39,7 +41,7 @@
     }
 }
 
-@media (min-width: calc(theme('screens.md') + 1px)) {
+@media (min-width: calc(theme("screens.md") + 1px)) {
     .table-repeater-component.break-point-md {
         &.streamlined {
             .fi-input-wrp,
@@ -68,7 +70,7 @@
     }
 }
 
-@media (min-width: calc(theme('screens.lg') + 1px)) {
+@media (min-width: calc(theme("screens.lg") + 1px)) {
     .table-repeater-component.break-point-lg {
         &.streamlined {
             .fi-input-wrp,
@@ -97,7 +99,7 @@
     }
 }
 
-@media (min-width: calc(theme('screens.xl') + 1px)) {
+@media (min-width: calc(theme("screens.xl") + 1px)) {
     .table-repeater-component.break-point-xl {
         &.streamlined {
             .fi-input-wrp,
@@ -126,7 +128,7 @@
     }
 }
 
-@media (min-width: calc(theme('screens.2xl') + 1px)) {
+@media (min-width: calc(theme("screens.2xl") + 1px)) {
     .table-repeater-component.break-point-2xl {
         &.streamlined {
             .fi-input-wrp,
@@ -155,19 +157,29 @@
     }
 }
 
-@media (max-width: theme('screens.sm')) {
+@media (max-width: theme("screens.sm")) {
     .table-repeater-component.break-point-sm table {
         @apply block w-full;
 
-        thead { @apply sr-only; }
+        thead {
+            @apply sr-only;
+        }
 
-        :is(tbody, th, td) { @apply block !w-full; }
+        :is(tbody, th, td) {
+            @apply block !w-full;
+        }
 
-        label { @apply text-start; }
+        label {
+            @apply text-start;
+        }
 
-        tr { @apply p-4 !w-full flex flex-col gap-6; }
+        tr {
+            @apply p-4 !w-full flex flex-col gap-6;
+        }
 
-        tr td:last-of-type ul { @apply px-0; }
+        tr td:last-of-type ul {
+            @apply px-0;
+        }
 
         .table-repeater-column.has-hidden-label .fi-fo-field-wrp > label {
             @apply not-sr-only;
@@ -175,19 +187,29 @@
     }
 }
 
-@media (max-width: theme('screens.md')) {
+@media (max-width: theme("screens.md")) {
     .table-repeater-component.break-point-md table {
         @apply block w-full;
 
-        thead { @apply sr-only; }
+        thead {
+            @apply sr-only;
+        }
 
-        :is(tbody, th, td) { @apply block !w-full; }
+        :is(tbody, th, td) {
+            @apply block !w-full;
+        }
 
-        label { @apply text-start; }
+        label {
+            @apply text-start;
+        }
 
-        tr { @apply p-4 !w-full flex flex-col gap-6; }
+        tr {
+            @apply p-4 !w-full flex flex-col gap-6;
+        }
 
-        tr td:last-of-type ul { @apply px-0; }
+        tr td:last-of-type ul {
+            @apply px-0;
+        }
 
         .table-repeater-column.has-hidden-label .fi-fo-field-wrp > label {
             @apply not-sr-only;
@@ -195,19 +217,29 @@
     }
 }
 
-@media (max-width: theme('screens.lg')) {
+@media (max-width: theme("screens.lg")) {
     .table-repeater-component.break-point-lg table {
         @apply block w-full;
 
-        thead { @apply sr-only; }
+        thead {
+            @apply sr-only;
+        }
 
-        :is(tbody, th, td) { @apply block !w-full; }
+        :is(tbody, th, td) {
+            @apply block !w-full;
+        }
 
-        label { @apply text-start; }
+        label {
+            @apply text-start;
+        }
 
-        tr { @apply p-4 !w-full flex flex-col gap-6; }
+        tr {
+            @apply p-4 !w-full flex flex-col gap-6;
+        }
 
-        tr td:last-of-type ul { @apply px-0; }
+        tr td:last-of-type ul {
+            @apply px-0;
+        }
 
         .table-repeater-column.has-hidden-label .fi-fo-field-wrp > label {
             @apply not-sr-only;
@@ -215,19 +247,29 @@
     }
 }
 
-@media (max-width: theme('screens.xl')) {
+@media (max-width: theme("screens.xl")) {
     .table-repeater-component.break-point-xl table {
         @apply block w-full;
 
-        thead { @apply sr-only; }
+        thead {
+            @apply sr-only;
+        }
 
-        :is(tbody, th, td) { @apply block !w-full; }
+        :is(tbody, th, td) {
+            @apply block !w-full;
+        }
 
-        label { @apply text-start; }
+        label {
+            @apply text-start;
+        }
 
-        tr { @apply p-4 !w-full flex flex-col gap-6; }
+        tr {
+            @apply p-4 !w-full flex flex-col gap-6;
+        }
 
-        tr td:last-of-type ul { @apply px-0; }
+        tr td:last-of-type ul {
+            @apply px-0;
+        }
 
         .table-repeater-column.has-hidden-label .fi-fo-field-wrp > label {
             @apply not-sr-only;
@@ -235,23 +277,32 @@
     }
 }
 
-@media (max-width: theme('screens.2xl')) {
+@media (max-width: theme("screens.2xl")) {
     .table-repeater-component.break-point-2xl table {
         @apply block w-full;
 
-        thead { @apply sr-only; }
+        thead {
+            @apply sr-only;
+        }
 
-        :is(tbody, th, td) { @apply block !w-full; }
+        :is(tbody, th, td) {
+            @apply block !w-full;
+        }
 
-        label { @apply text-start; }
+        label {
+            @apply text-start;
+        }
 
-        tr { @apply p-4 !w-full flex flex-col gap-6; }
+        tr {
+            @apply p-4 !w-full flex flex-col gap-6;
+        }
 
-        tr td:last-of-type ul { @apply px-0; }
+        tr td:last-of-type ul {
+            @apply px-0;
+        }
 
         .table-repeater-column.has-hidden-label .fi-fo-field-wrp > label {
             @apply not-sr-only;
         }
     }
 }
-
