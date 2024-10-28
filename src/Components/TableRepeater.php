@@ -15,14 +15,13 @@ class TableRepeater extends Repeater
     use Concerns\HasHeader;
 
     protected bool | Closure | null $showLabels = null;
-    protected bool | Closure | null $minimal = false;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->registerActions([
-            fn(TableRepeater $component): array => $component->getExtraActions()
+            fn (TableRepeater $component): array => $component->getExtraActions()
         ]);
     }
 
@@ -57,19 +56,6 @@ class TableRepeater extends Repeater
     {
         return $this->evaluate($this->showLabels) ?? false;
     }
-
-    public function minimal(bool | Closure | null $condition = true): static
-    {
-        $this->minimal = $condition;
-
-        return $this;
-    }
-
-    public function isMinimal(): bool
-    {
-        return $this->evaluate($this->minimal) ?? false;
-    }
-
 
     public function getView(): string
     {
