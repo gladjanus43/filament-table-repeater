@@ -133,7 +133,7 @@
                                 <tr
                                     wire:key="{{ $this->getId() }}.{{ $row->getStatePath() }}.{{ $field::class }}.item"
                                     x-sortable-item="{{ $uuid }}"
-                                    class="table-repeater-row "
+                                    @class(['table-repeater-row'])
                                 >
                                     @php($counter = 0)
                                     @foreach ($row->getComponents() as $cell)
@@ -144,7 +144,7 @@
                                                 @class([
                                                     'table-repeater-column',
                                                     'p-2' => !$streamlined && !$isMinimal,
-                                                    'pr-3 pt-5' => $isMinimal,
+                                                    'pr-3 py-3' => $isMinimal,
                                                     'has-hidden-label' => $cell->isLabelHidden(),
                                                     match ($headers[$counter++]->getAlignment()) {
                                                         'center', Alignment::Center => 'text-center',
