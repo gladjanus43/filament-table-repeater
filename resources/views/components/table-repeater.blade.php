@@ -24,6 +24,8 @@
     $emptyLabel = $getEmptyLabel();
     $streamlined = $isStreamlined();
 
+    $minimal = $isMinimal();
+
     $statePath = $getStatePath();
 
     foreach ($extraActions as $extraAction) {
@@ -64,38 +66,50 @@
         ]) }}
     >
         @if (count($containers) || $emptyLabel !== false)
-            <div class="table-repeater-container rounded-xl relative ring-1 ring-gray-950/5 dark:ring-white/20">
+            <div @class([
+                'table-repeater-container relative',
+                'ring-1 ring-gray-950/5 dark:ring-white/20 rounded-xl' => !$minimal,
+            ])>
+
                 <table class="w-full">
                     <thead @class([
-                        'table-repeater-header-hidden sr-only' => ! $renderHeader,
-                        'table-repeater-header rounded-t-xl overflow-hidden border-b border-gray-950/5 dark:border-white/20' => $renderHeader,
+                        'table-repeater-header-hidden sr-only' => !$renderHeader,
+                        'table-repeater-header overflow-hidden' => $renderHeader,
+                        'border-b border-gray-950/5 dark:border-white/10 rounded-t-xl' => !$minimal,
                     ])>
-                    <tr class="text-xs md:divide-x rtl:divide-x-reverse md:divide-gray-950/5 dark:md:divide-white/20">
+                    <tr @class([
+                            'text-xs',
+                            'md:divide-x md:divide-gray-950/5 dark:md:divide-white/20' => !$minimal,
+                        ])>
                         @foreach ($headers as $key => $header)
                             <th
                                 @class([
-                                    'table-repeater-header-column p-2 font-medium first:rounded-tl-xl rtl:first:rounded-tr-xl rtl:first:rounded-tl-none last:rounded-tr-xl rtl:last:rounded-tr-none rtl:last:rounded-tl-xl bg-gray-100 dark:text-gray-300 dark:bg-gray-900/60',
-                                    match($header->getAlignment()) {
-                                      'center', Alignment::Center => 'text-center',
-                                      'right', 'end', Alignment::Right, Alignment::End => 'text-end',
-                                      default => 'text-start'
-                                    }
+                                    'table-repeater-header-column p-2',
+                                    'first:rounded-tl-xl last:rounded-tr-xl bg-gray-100 dark:text-gray-300 dark:bg-gray-900/60 font-medium p-2' => !$minimal,
+                                    match ($header->getAlignment()) {
+                                        'center', Alignment::Center => 'text-center',
+                                        'right', 'end', Alignment::Right, Alignment::End => 'text-end',
+                                        default => 'text-start',
+                                    },
                                 ])
                                 style="width: {{ $header->getWidth() }}"
                             >
                                 {{ $header->getLabel() }}
                                 @if ($header->isRequired())
                                     <span class="whitespace-nowrap">
-                                        <sup class="font-medium text-danger-700 dark:text-danger-400">*</sup>
-                                    </span>
+                                            <sup class="font-medium text-danger-700 dark:text-danger-400">*</sup>
+                                        </span>
                                 @endif
                             </th>
                         @endforeach
                         @if ($hasActions && count($containers))
-                            <th class="table-repeater-header-column w-px last:rounded-tr-xl rtl:last:rounded-tr-none rtl:last:rounded-tl-xl p-2 bg-gray-100 dark:bg-gray-900/60">
-                                <span class="sr-only">
-                                    {{ trans('table-repeater::components.repeater.row_actions.label') }}
-                                </span>
+                            <th @class([
+                                    'table-repeater-header-column w-px ',
+                                    'last:rounded-tr-xl p-2 bg-gray-100 dark:bg-gray-900/60' => !$minimal,
+                                ])>
+                                    <span class="sr-only">
+                                        {{ trans('table-repeater::components.repeater.row_actions.label') }}
+                                    </span>
                             </th>
                         @endif
                     </tr>
@@ -103,7 +117,10 @@
                     <tbody
                         x-sortable
                         wire:end.stop="{{ 'mountFormComponentAction(\'' . $statePath . '\', \'reorder\', { items: $event.target.sortable.toArray() })' }}"
-                        class="table-repeater-rows-wrapper divide-y divide-gray-950/5 dark:divide-white/20"
+                        @class([
+                            'table-repeater-rows-wrapper',
+                            'divide-y divide-gray-950/5 dark:divide-white/20 pr-2' => !$minimal,
+                        ])
                     >
                     @if (count($containers))
                         @foreach ($containers as $uuid => $row)
@@ -125,7 +142,7 @@
                                     @else
                                         <td
                                             @class([
-                                                'table-repeater-column align-top',
+                                                'table-repeater-column',
                                                 'p-2' => ! $streamlined,
                                                 'has-hidden-label' => $cell->isLabelHidden(),
                                                 match($headers[$counter++]->getAlignment()) {
@@ -142,7 +159,7 @@
                                 @endforeach
 
                                 @if ($hasActions)
-                                    <td class="table-repeater-column p-2 w-px align-top">
+                                    <td class="table-repeater-column p-2 w-px">
                                         <ul class="flex items-center table-repeater-row-actions gap-x-3 px-2">
                                             @foreach ($visibleExtraItemActions as $extraItemAction)
                                                 <li>
