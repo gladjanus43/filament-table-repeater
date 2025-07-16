@@ -3,8 +3,6 @@
     use Filament\Support\Enums\Alignment;
     use Filament\Support\Enums\MaxWidth;
 
-    $isMinimal = $isMinimal();
-
     $containers = $getChildComponentContainers();
 
     $addAction = $getAction($getAddActionName());
@@ -29,26 +27,28 @@
     $statePath = $getStatePath();
 
     foreach ($extraActions as $extraAction) {
-        $visibleExtraActions = array_filter($extraActions, fn(Action $action): bool => $action->isVisible());
+        $visibleExtraActions = array_filter(
+            $extraActions,
+            fn (Action $action): bool => $action->isVisible(),
+        );
     }
 
     foreach ($extraItemActions as $extraItemAction) {
-        $visibleExtraItemActions = array_filter($extraItemActions, fn(Action $action): bool => $action->isVisible());
+        $visibleExtraItemActions = array_filter(
+            $extraItemActions,
+            fn (Action $action): bool => $action->isVisible(),
+        );
     }
 
-    $hasActions =
-        $reorderAction->isVisible() ||
-        $cloneAction->isVisible() ||
-        $deleteAction->isVisible() ||
-        $moveUpAction->isVisible() ||
-        $moveDownAction->isVisible() ||
-        filled($visibleExtraItemActions);
+    $hasActions = $reorderAction->isVisible()
+        || $cloneAction->isVisible()
+        || $deleteAction->isVisible()
+        || $moveUpAction->isVisible()
+        || $moveDownAction->isVisible()
+        || filled($visibleExtraItemActions);
 @endphp
 
-<x-dynamic-component
-    :component="$getFieldWrapperView()"
-    :field="$field"
->
+<x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
     <div
         x-data="{}"
         {{ $attributes->merge($getExtraAttributes())->class([
@@ -60,10 +60,9 @@
                 'xl', MaxWidth::ExtraLarge => 'break-point-xl',
                 '2xl', MaxWidth::TwoExtraLarge => 'break-point-2xl',
                 default => 'break-point-md',
-            },
+            }
         ]) }}
     >
-
         @if (count($containers) || $emptyLabel !== false)
             <div @class([
                 'table-repeater-container relative',
@@ -122,108 +121,111 @@
                             'divide-y divide-gray-950/5 dark:divide-white/20 pr-2' => !$isMinimal,
                         ])
                     >
-                        @if (count($containers))
-                            @foreach ($containers as $uuid => $row)
-                                @php
-                                    $visibleExtraItemActions = array_filter(
-                                        $extraItemActions,
-                                        fn(Action $action): bool => $action(['item' => $uuid])->isVisible(),
-                                    );
-                                @endphp
-                                <tr
-                                    wire:key="{{ $this->getId() }}.{{ $row->getStatePath() }}.{{ $field::class }}.item"
-                                    x-sortable-item="{{ $uuid }}"
-                                    @class(['table-repeater-row'])
-                                >
-                                    @php($counter = 0)
-                                    @foreach ($row->getComponents() as $cell)
-                                        @if ($cell instanceof \Filament\Forms\Components\Hidden || $cell->isHidden())
+                    @if (count($containers))
+                        @foreach ($containers as $uuid => $row)
+                            @php
+                                $visibleExtraItemActions = array_filter(
+                                    $extraItemActions,
+                                    fn (Action $action): bool => $action(['item' => $uuid])->isVisible(),
+                                );
+                            @endphp
+                            <tr
+                                wire:key="{{ $this->getId() }}.{{ $row->getStatePath() }}.{{ $field::class }}.item"
+                                x-sortable-item="{{ $uuid }}"
+                                class="table-repeater-row"
+                            >
+                                @php($counter = 0)
+                                @foreach($row->getComponents() as $cell)
+                                    @if($cell instanceof \Filament\Forms\Components\Hidden || $cell->isHidden())
+                                        {{ $cell }}
+                                    @else
+                                        <td
+                                            @class([
+                                                'table-repeater-column',
+                                                'p-2' => ! $streamlined,
+                                                'has-hidden-label' => $cell->isLabelHidden(),
+                                                match($headers[$counter++]->getAlignment()) {
+                                                  'center', Alignment::Center => 'text-center',
+                                                  'right', 'end', Alignment::Right, Alignment::End => 'text-end',
+                                                  default => 'text-start'
+                                                }
+                                            ])
+                                            style="width: {{ $cell->getMaxWidth() ?? 'auto' }}"
+                                        >
                                             {{ $cell }}
-                                        @else
-                                            <td
-                                                @class([
-                                                    'table-repeater-column',
-                                                    'p-2' => !$streamlined && !$isMinimal,
-                                                    'pr-3 py-3' => $isMinimal,
-                                                    'has-hidden-label' => $cell->isLabelHidden(),
-                                                    match ($headers[$counter++]->getAlignment()) {
-                                                        'center', Alignment::Center => 'text-center',
-                                                        'right', 'end', Alignment::Right, Alignment::End => 'text-end',
-                                                        default => 'text-start',
-                                                    },
-                                                ])
-                                                style="width: {{ $cell->getMaxWidth() ?? 'auto' }}"
-                                            >
-                                                {{ $cell }}
-                                            </td>
-                                        @endif
-                                    @endforeach
-
-                                    @if ($hasActions)
-                                        <td class="table-repeater-column p-2 w-px">
-                                            <ul class="flex items-center table-repeater-row-actions gap-x-3 px-2">
-                                                @foreach ($visibleExtraItemActions as $extraItemAction)
-                                                    <li>
-                                                        {{ $extraItemAction(['item' => $uuid]) }}
-                                                    </li>
-                                                @endforeach
-
-                                                @if ($reorderAction->isVisible())
-                                                    <li
-                                                        x-sortable-handle
-                                                        class="shrink-0"
-                                                    >
-                                                        {{ $reorderAction }}
-                                                    </li>
-                                                @endif
-
-                                                @if ($isReorderableWithButtons)
-                                                    @if (!$loop->first)
-                                                        <li>
-                                                            {{ $moveUpAction(['item' => $uuid]) }}
-                                                        </li>
-                                                    @endif
-
-                                                    @if (!$loop->last)
-                                                        <li>
-                                                            {{ $moveDownAction(['item' => $uuid]) }}
-                                                        </li>
-                                                    @endif
-                                                @endif
-
-                                                @if ($cloneAction->isVisible())
-                                                    <li>
-                                                        {{ $cloneAction(['item' => $uuid]) }}
-                                                    </li>
-                                                @endif
-
-                                                @if ($deleteAction->isVisible())
-                                                    <li>
-                                                        {{ $deleteAction(['item' => $uuid]) }}
-                                                    </li>
-                                                @endif
-                                            </ul>
                                         </td>
                                     @endif
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr class="table-repeater-row table-repeater-empty-row">
-                                <td
-                                    colspan="{{ count($headers) + intval($hasActions) }}"
-                                    class="table-repeater-column table-repeater-empty-column p-4 w-px text-center italic"
-                                >
-                                    {{ $emptyLabel ?: trans('table-repeater::components.repeater.empty.label') }}
-                                </td>
+                                @endforeach
+
+                                @if ($hasActions)
+                                    <td class="table-repeater-column p-2 w-px">
+                                        <ul class="flex items-center table-repeater-row-actions gap-x-3 px-2">
+                                            @foreach ($visibleExtraItemActions as $extraItemAction)
+                                                <li>
+                                                    {{ $extraItemAction(['item' => $uuid]) }}
+                                                </li>
+                                            @endforeach
+
+                                            @if ($reorderAction->isVisible())
+                                                <li x-sortable-handle class="shrink-0">
+                                                    {{ $reorderAction }}
+                                                </li>
+                                            @endif
+
+                                            @if ($isReorderableWithButtons)
+                                                @if (! $loop->first)
+                                                    <li>
+                                                        {{ $moveUpAction(['item' => $uuid]) }}
+                                                    </li>
+                                                @endif
+
+                                                @if (! $loop->last)
+                                                    <li>
+                                                        {{ $moveDownAction(['item' => $uuid]) }}
+                                                    </li>
+                                                @endif
+                                            @endif
+
+                                            @if ($cloneAction->isVisible())
+                                                <li>
+                                                    {{ $cloneAction(['item' => $uuid]) }}
+                                                </li>
+                                            @endif
+
+                                            @if ($deleteAction->isVisible())
+                                                <li>
+                                                    {{ $deleteAction(['item' => $uuid]) }}
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </td>
+                                @endif
                             </tr>
-                        @endif
+                        @endforeach
+                    @else
+                        <tr class="table-repeater-row table-repeater-empty-row">
+                            <td colspan="{{ count($headers) + intval($hasActions) }}"
+                                class="table-repeater-column table-repeater-empty-column p-4 w-px text-center italic">
+                                {{ $emptyLabel ?: trans('table-repeater::components.repeater.empty.label') }}
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
             </div>
         @endif
 
         @if ($addAction->isVisible() || filled($visibleExtraActions))
-            <ul class="relative flex gap-4 justify-center">
+            <ul
+                @class([
+                    'relative flex gap-4',
+                    match ($getAddActionAlignment()) {
+                        Alignment::Start, Alignment::Left => 'justify-start',
+                        Alignment::End, Alignment::Right => 'justify-end',
+                        default =>  'justify-center',
+                    },
+                ])
+            >
                 @if ($addAction->isVisible())
                     <li>
                         {{ $addAction }}
@@ -232,7 +234,7 @@
                 @if (filled($visibleExtraActions))
                     @foreach ($visibleExtraActions as $extraAction)
                         <li>
-                            {{ $extraAction }}
+                            {{ ($extraAction) }}
                         </li>
                     @endforeach
                 @endif
